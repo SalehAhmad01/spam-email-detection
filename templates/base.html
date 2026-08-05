@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-950 text-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SMS & Email Guard | Anti-Fraud Intelligence{% endblock %}</title>
+
+    <!-- Simple Tailwind CSS (CDN + Local compiled stylesheet) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'css/dist/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/input.css' %}">
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="min-h-screen bg-slate-950 text-slate-200 flex flex-col font-sans antialiased">
+
+    {% block body_layout %}
+    <!-- Top Navbar -->
+    {% include 'components/navbar.html' %}
+
+    <!-- Main Container (Sidebar + Content Stage) -->
+    <div class="flex flex-1 w-full">
+
+        <!-- Left Sidebar -->
+        {% include 'components/sidebar.html' %}
+
+        <!-- Content Area Stage -->
+        <div class="flex-1 flex flex-col min-w-0 bg-slate-950">
+            <main class="flex-1 p-6 md:p-8 max-w-7xl w-full mx-auto space-y-6">
+                {% block content %}{% endblock %}
+            </main>
+
+            <!-- Footer -->
+            {% include 'components/footer.html' %}
+        </div>
+    </div>
+    {% endblock body_layout %}
+
+
+    <!-- Mobile Sidebar Toggle JS -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const toggleBtn = document.getElementById('sidebar-toggle');
+            const sidebar = document.getElementById('sidebar');
+            if (toggleBtn && sidebar) {
+                toggleBtn.addEventListener('click', () => {
+                    sidebar.classList.toggle('hidden');
+                });
+            }
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

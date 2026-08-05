@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block title %}User Profile | SMS & Email Guard{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- User Info Header Card -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+        <div class="flex items-center space-x-4">
+            <div class="w-14 h-14 rounded-2xl bg-blue-600 border border-blue-500/50 flex items-center justify-center text-white text-xl font-bold shadow-md">
+                {{ user.username|slice:":2"|upper }}
+            </div>
+            <div>
+                <h2 class="text-xl font-bold text-white">{{ user.username }}</h2>
+                <p class="text-xs text-slate-400 font-mono">{{ user.email|default:"No email provided" }}</p>
+                <div class="flex items-center space-x-2 mt-2">
+                    <span class="px-2.5 py-0.5 bg-blue-950 border border-blue-900 text-blue-400 text-[11px] font-semibold rounded-md">Analyst Level 1</span>
+                    <span class="text-xs text-slate-500">Joined {{ user.date_joined|date:"M Y" }}</span>
+                </div>
+            </div>
+        </div>
+
+        <form action="{% url 'accounts:logout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="px-4 py-2 bg-slate-950 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white text-xs font-semibold rounded-lg transition-colors flex items-center space-x-2">
+                <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
+                </svg>
+                <span>Sign Out</span>
+            </button>
+        </form>
+    </div>
+
+    <!-- Stats & Details Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Messages Submitted Stat -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Scans Submitted</p>
+            <p class="text-3xl font-bold text-white mt-2">{{ submitted_count }}</p>
+            <p class="text-xs text-slate-500 mt-1">Submitted for threat inspection</p>
+        </div>
+
+        <!-- Account Security Status -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Security Status</p>
+            <p class="text-3xl font-bold text-emerald-400 mt-2">Active</p>
+            <p class="text-xs text-slate-500 mt-1">Last login: {{ user.last_login|date:"M d, H:i"|default:"First Session" }}</p>
+        </div>
+
+        <!-- Region Node -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
+            <p class="text-xs font-semibold uppercase tracking-wider text-slate-400">Assigned Shield Node</p>
+            <p class="text-3xl font-bold text-blue-400 mt-2">NG-WEST</p>
+            <p class="text-xs text-slate-500 mt-1">Lagos Operational Cluster</p>
+        </div>
+    </div>
+
+    <!-- Profile Edit Form -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm">
+        <h3 class="text-base font-bold text-white mb-4">Edit Profile Information</h3>
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 tracking-wider mb-1.5">First Name</label>
+                    {{ form.first_name }}
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 tracking-wider mb-1.5">Last Name</label>
+                    {{ form.last_name }}
+                </div>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold uppercase text-slate-400 tracking-wider mb-1.5">Email Address</label>
+                {{ form.email }}
+            </div>
+
+            <div class="flex justify-end">
+                <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg shadow-sm transition-colors">
+                    Save Profile Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
