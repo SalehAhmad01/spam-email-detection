@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% block title %}Bulk Upload Results | SMS & Email Guard{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm">
+        <div>
+            <h1 class="text-2xl font-bold text-white tracking-tight">Bulk Upload Batch Results</h1>
+            <p class="text-sm text-slate-400 mt-0.5">Summary table of batch CSV messages processed by threat engine.</p>
+        </div>
+        <div class="flex items-center space-x-3">
+            <a href="{% url 'inbox:submit' %}" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-medium text-sm rounded-lg shadow-sm transition-colors flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                <span>Check New Message</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Results Table -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
+        <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+            <h2 class="text-base font-bold text-white">Processed Batch Items</h2>
+            <span class="text-xs text-slate-400 font-mono">{{ results|length }} Messages Evaluated</span>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead class="bg-slate-950 text-slate-400 text-xs font-semibold uppercase border-b border-slate-800">
+                    <tr>
+                        <th class="py-3.5 px-6">Channel</th>
+                        <th class="py-3.5 px-6">Sender Details</th>
+                        <th class="py-3.5 px-6">Message Content</th>
+                        <th class="py-3.5 px-6">Classification</th>
+                        <th class="py-3.5 px-6">Confidence</th>
+                        <th class="py-3.5 px-6">Details</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800 text-slate-300">
+                    {% for item in results %}
+                        <tr>
+                            <td class="py-4 px-6 font-medium">
+                                <span class="px-2.5 py-1 bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-md uppercase">
+                                    {{ item.message.get_channel_display }}
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 font-mono text-xs text-slate-200">{{ item.message.sender|default:"-" }}</td>
+                            <td class="py-4 px-6 text-slate-400 max-w-xs truncate">{{ item.message.raw_text }}</td>
+                            <td class="py-4 px-6">
+                                {% if item.label == 'fraud' %}
+                                    <span class="px-2.5 py-1 bg-red-950/80 border border-red-900/60 text-red-400 text-xs font-semibold rounded-md inline-flex items-center space-x-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                        <span>FRAUD</span>
+                                    </span>
+                                {% elif item.label == 'spam' %}
+                                    <span class="px-2.5 py-1 bg-amber-950/80 border border-amber-900/60 text-amber-400 text-xs font-semibold rounded-md inline-flex items-center space-x-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                        <span>SPAM</span>
+                                    </span>
+                                {% else %}
+                                    <span class="px-2.5 py-1 bg-emerald-950/80 border border-emerald-900/60 text-emerald-400 text-xs font-semibold rounded-md inline-flex items-center space-x-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                        <span>LEGIT</span>
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="py-4 px-6 text-xs text-slate-400 font-mono">
+                                {% widthratio item.confidence_score 1 100 %}%
+                            </td>
+                            <td class="py-4 px-6">
+                                <a href="{% url 'inbox:result' pk=item.pk %}" class="text-xs text-blue-400 hover:text-blue-300 font-medium">Inspect &rarr;</a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="py-8 text-center text-slate-500 text-xs">
+                                No bulk results found. Return to <a href="{% url 'inbox:submit' %}" class="text-blue-400 underline">Message Check</a> to upload a CSV batch.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,86 @@
+text,label,channel,language_mix,sender
+Urgent: Your BVN has been flagged for non-compliance. Re-validate immediately at http://cbn-audit-portal.ng,fraud,sms,english,+2348039912041
+"Dear Customer, N50,000 has been credited to your account via bank transfer. Ref: TXN94201.",legit,sms,english,GTBank
+"You won N500,000 from MTN Promo! Call 08023456789 to claim your cash reward now.",spam,sms,english,+2348023456789
+Abeg verify your account details by clicking http://palmpay-login.com to avoid account freeze,fraud,sms,pidgin,+2349011223344
+"Hello, your meeting with the audit team is scheduled for 3:00 PM tomorrow.",legit,email,english,audit@company.com
+ALERT: Abnormal login attempt detected on your mobile banking app. Click link to secure account.,fraud,email,english,security-notice@bank-online.ng
+Make 200k weekly working from home! No experience needed. WhatsApp 07012345678,spam,whatsapp,english,+2347012345678
+"Your GTBank account was credited with NGN 45,000.00 on 03-AUG-2026. Available balance is NGN 132,450.00.",legit,sms,english,GTBank
+Reminder: Your dentist appointment is tomorrow at 10am. Reply CONFIRM to keep this slot or CANCEL to reschedule.,legit,sms,english,Clinic
+"Your MTN data purchase of 2GB was successful. Balance: 2.3GB, valid till 15/09/2026. Thank you for choosing MTN.",legit,sms,english,MTN
+Your OTP for the transaction on your UBA account is 482913. Do not share this code with anyone. It expires in 5 minutes.,legit,sms,english,UBA
+"Hi Ada, just confirming our meeting at 2pm today in the conference room. Please bring the budget report.",legit,email,english,ada@company.com
+Your electricity token purchase was successful. Token: 1234-5678-9012-3456-7890. Units: 45.2kWh.,legit,sms,english,IKEDC
+"Dear Customer, your monthly statement for July 2026 is now available on the Access Bank mobile app.",legit,email,english,AccessBank
+Reminder: School fees for the second term are due on 30th August. Kindly make payment at the bursary office.,legit,sms,english,SchoolAdmin
+Your Jumia order #NG20938471 has been shipped and will arrive within 3-5 working days.,legit,sms,english,Jumia
+"Good morning team, the sprint review has been moved to Friday 9am. Please update your task boards before then.",legit,email,english,teamlead@company.com
+"Abeg I dey come your place by 6pm today, make you wait for me o.",legit,sms,pidgin,+2348020000001
+"Baba make we meet for church tomorrow, service go start by 8am sharp.",legit,sms,pidgin,+2348020000002
+"I don reach house, I go call you when I don rest small.",legit,sms,pidgin,+2348020000003
+"Wetin dey happen for the meeting today, abeg update me when e don finish.",legit,sms,pidgin,+2348020000004
+"E don tey wey I no see you o, make we link up this weekend.",legit,sms,pidgin,+2348020000005
+"Your account don credit with 20k, make you check am for bank app.",legit,sms,pidgin,FirstBank
+"Na so we go meet tomorrow for the office, no forget to carry the file.",legit,sms,pidgin,+2348020000006
+"I dey send the money now, check your alert in like 5 minutes.",legit,sms,pidgin,+2348020000007
+"Hey bro, I dey reach your side by 4pm, we go gist small before the event start.",legit,sms,mixed,+2348020000008
+"Please confirm say you don receive the invoice I sent this morning, thank you.",legit,email,mixed,finance@company.com
+"Meeting don shift to 3pm, abeg tell the rest of the team make dem know.",legit,sms,mixed,+2348020000009
+"Your delivery don arrive our warehouse, e go reach you by tomorrow morning.",legit,sms,mixed,Logistics
+"I don submit the report, oga said he will review am before Friday.",legit,email,mixed,colleague@company.com
+"Thanks for the payment, receipt don send to your email already.",legit,sms,mixed,Vendor
+"Good afternoon, your appointment don confirm for 11am tomorrow at the clinic.",legit,sms,mixed,Clinic
+CONGRATULATIONS! You have been selected to win a brand new car. Click here to claim your prize now!,spam,sms,english,+2349000000001
+"Cheap loans available! No collateral, no stress. Apply now and get cash in your account within 1 hour.",spam,sms,english,+234900000002
+"Buy 1 get 3 free on all our herbal products! Limited stock, order now before it finishes.",spam,sms,english,+234900000003
+"Earn 500,000 naira weekly working from home. No experience needed. Send your details to get started today.",spam,email,english,jobs@workhome.ng
+"HOT DEAL: Buy this phone at 70% discount today only. Stock is very limited, do not miss out.",spam,sms,english,+234900000004
+You have been pre-approved for a personal loan of up to 2 million naira. Reply YES to proceed immediately.,spam,sms,english,+234900000005
+Lose 10kg in 7 days with this miracle tea! Order now and get free delivery nationwide.,spam,sms,english,+234900000006
+Free data bundle waiting for you! Click the link below to activate 10GB free data instantly.,spam,sms,english,+234900000007
+Double your money in 24 hours with our new investment platform. Minimum deposit only 5000 naira.,spam,sms,english,+234900000008
+Get followers and likes fast! Boost your social media pages starting from just 1000 naira.,spam,email,english,boost@socialmed.ng
+"Oya come buy this recharge card wey dey cheap well well, na today price be this o.",spam,sms,pidgin,+234900000009
+"Free giveaway dey happen now, na only you dem still dey wait make you claim your own.",spam,sms,pidgin,+234900000010
+"Sharp sharp loan dey available, no collateral, e go enter your account sef sef today.",spam,sms,pidgin,+234900000011
+"Come and buy this cream wey go make your skin shine like say na bulb, order now.",spam,sms,pidgin,+234900000012
+"Big discount dey for this shoe o, no waste time, e go finish before you know am.",spam,sms,pidgin,+234900000013
+"Money dey wait for you, just click this link make you collect your own share sharp sharp.",spam,sms,pidgin,+234900000014
+"Free airtime dey give out today, message this number make dem send your own now now.",spam,sms,pidgin,+234900000015
+"Abeg click this link make you claim your free data, e go enter your phone sharp sharp.",spam,sms,mixed,+234900000016
+"Sharp sharp loan available, no wahala, apply now and get your cash within one hour.",spam,sms,mixed,+234900000017
+"Big sale dey happen for our shop today, discount plenty, come buy before e finish o.",spam,sms,mixed,+234900000018
+"You don win big prize, just send your details make we process am for you sharp sharp.",spam,email,mixed,promo@winbig.ng
+"Oya order this weight loss tea now, e go work like magic within one week, buy now.",spam,sms,mixed,+234900000019
+"Free followers dey available, just click the link make your page blow overnight.",spam,sms,mixed,+234900000020
+"URGENT: Your BVN will be deactivated today. Send your BVN, date of birth and account number to this number to avoid suspension.",fraud,sms,english,+2347000000001
+"Dear Winner, your email has been selected in the international lottery draw. Send your bank details to claim your 2.5 million dollar prize.",fraud,email,english,lottery@intldraw.org
+"This is your bank calling. Your ATM card has been blocked. Kindly send your card number, PIN and OTP to reactivate it immediately.",fraud,sms,english,+2347000000002
+Your NIN registration is incomplete and will be deactivated in 24 hours. Reply with your NIN and phone number to avoid deactivation.,fraud,sms,english,+2347000000003
+"We are from the Federal Inland Revenue Service. You have an unpaid tax refund of 850,000 naira. Send your account details to receive it.",fraud,email,english,refunds@firs-notice.ng
+"Your parcel from abroad is held at customs. Pay a clearance fee of 15,000 naira to this account to release your package immediately.",fraud,sms,english,+2347000000004
+"Congratulations, you have inherited 3.2 million dollars from a late relative abroad. Contact our office with your details to process the transfer.",fraud,email,english,estate@barrister.org
+URGENT SECURITY ALERT: Unusual login detected on your account. Verify your identity now by sending your password and OTP to this number.,fraud,sms,english,+2347000000005
+"Investment opportunity: Deposit 50,000 naira today and receive 500,000 naira in 3 days guaranteed, no risk involved, act now.",fraud,sms,english,+2347000000006
+"Your account will be permanently closed today unless you confirm your BVN, NIN and account PIN through this link immediately.",fraud,sms,english,+2347000000007
+"Dear Customer, your ATM card expires today. Send your card number, expiry date and CVV to renew it before midnight.",fraud,sms,english,+2347000000008
+This is the CBN verification team. Your account has been flagged for review. Send your BVN immediately to prevent it from being frozen.,fraud,email,english,cbn-verify@audit-ng.org
+"Dem say your BVN don expire, abeg send your BVN number and date of birth make dem update am sharp sharp before dem block your account.",fraud,sms,pidgin,+2347000000009
+"Oga don die and leave plenty money for you for foreign account, send your bank detail make we transfer the money give you.",fraud,email,pidgin,foreign-estate@claim.org
+"Your ATM card don block, send your card number and PIN make dem open am back for you now now.",fraud,sms,pidgin,+2347000000010
+"Na me be the customs officer, your package dey held, send 10k make we release am today before e spoil.",fraud,sms,pidgin,+2347000000011
+"Dem select your number for big lottery win, send your account number make dem pay the money enter your account.",fraud,sms,pidgin,+2347000000012
+"Your NIN go cancel today if you no send the number now, abeg reply sharp sharp before dem block am.",fraud,sms,pidgin,+2347000000013
+"E get person wey wan give you loan sharp sharp, just send your BVN and account number make dem process am.",fraud,sms,pidgin,+2347000000014
+"Na bank dey call, dem say make you send your PIN and OTP make dem fix the wahala for your account.",fraud,sms,pidgin,+2347000000015
+"URGENT: Your BVN don expire, send your BVN and account number now before NCC block your line and account today.",fraud,sms,mixed,+2347000000016
+"Congratulations, you don win international lottery, send your bank details make we process your 2 million dollar prize sharp sharp.",fraud,mixed,email,lottery@intlwin.org
+"This na your bank, dem say your card don block, send your card number and PIN make dem reactivate am immediately.",fraud,sms,mixed,+2347000000017
+"Your package dey held for customs, abeg pay 15k clearance fee now before dem return the package back to sender.",fraud,sms,mixed,+2347000000018
+"Oga wey be your relative don die for abroad and leave money for you, send your account detail make we transfer am.",fraud,email,mixed,claims@estate-ng.org
+"CBN verification team dey call, dem say send your BVN and NIN sharp sharp before dem freeze your account today.",fraud,sms,mixed,+2347000000019
+"Investment don open, put 50k today make you collect 500k in 3 days, no risk at all, abeg act fast.",fraud,sms,mixed,+2347000000020
+"Your account go close today unless you confirm your BVN and PIN through this link now now, no delay am.",fraud,sms,mixed,+2347000000021
+"Na security alert be this, unusual login enter your account, send your password and OTP make we verify you sharp sharp.",fraud,sms,mixed,+2347000000022
+"Dem dey give free loan, no collateral, just send your BVN, NIN and account number make dem process am today sharp sharp.",fraud,sms,mixed,+2347000000023

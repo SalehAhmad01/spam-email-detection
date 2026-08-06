@@ -20,9 +20,9 @@
         </div>
     </div>
 
-    <!-- Quick Stats Grid (Calm Blue / Slate, Alert color only on Spam) -->
+    <!-- Live Database Stats Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <!-- Stat 1 -->
+        <!-- Stat 1: Total Messages Evaluated -->
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
             <div class="flex items-center justify-between text-slate-400">
                 <span class="text-xs font-semibold uppercase tracking-wider">Total Evaluated</span>
@@ -32,11 +32,11 @@
                     </svg>
                 </div>
             </div>
-            <p class="text-2xl font-bold text-white mt-3">14,892</p>
-            <p class="text-xs text-slate-500 mt-1">+12.4% vs last week</p>
+            <p class="text-2xl font-bold text-white mt-3">{{ total_messages }}</p>
+            <p class="text-xs text-slate-500 mt-1">Live database total</p>
         </div>
 
-        <!-- Stat 2: High Risk Alert (Uses RED) -->
+        <!-- Stat 2: High Risk Alert (Blocked Count) -->
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm relative overflow-hidden">
             <div class="flex items-center justify-between text-slate-400">
                 <span class="text-xs font-semibold uppercase tracking-wider text-red-400">Fraud & Spam Blocked</span>
@@ -46,11 +46,11 @@
                     </svg>
                 </div>
             </div>
-            <p class="text-2xl font-bold text-red-400 mt-3">1,402</p>
-            <p class="text-xs text-red-400/80 mt-1 font-medium">High risk threat level</p>
+            <p class="text-2xl font-bold text-red-400 mt-3">{{ blocked_count }}</p>
+            <p class="text-xs text-red-400/80 mt-1 font-medium">Intercepted threats</p>
         </div>
 
-        <!-- Stat 3 -->
+        <!-- Stat 3: Legitimate Messages -->
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
             <div class="flex items-center justify-between text-slate-400">
                 <span class="text-xs font-semibold uppercase tracking-wider">Legitimate Messages</span>
@@ -60,91 +60,81 @@
                     </svg>
                 </div>
             </div>
-            <p class="text-2xl font-bold text-white mt-3">13,490</p>
-            <p class="text-xs text-slate-500 mt-1">90.6% verified safe</p>
+            <p class="text-2xl font-bold text-white mt-3">{{ legit_count }}</p>
+            <p class="text-xs text-slate-500 mt-1">{{ legit_percentage }}% verified safe</p>
         </div>
 
-        <!-- Stat 4 -->
+        <!-- Stat 4: Shield Engine Status -->
         <div class="bg-slate-900 border border-slate-800 rounded-xl p-5 shadow-sm">
             <div class="flex items-center justify-between text-slate-400">
-                <span class="text-xs font-semibold uppercase tracking-wider">NLP Model Confidence</span>
+                <span class="text-xs font-semibold uppercase tracking-wider">Shield Engine</span>
                 <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-blue-400">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
                     </svg>
                 </div>
             </div>
-            <p class="text-2xl font-bold text-white mt-3">99.1%</p>
-            <p class="text-xs text-slate-500 mt-1">Updated 10m ago</p>
+            <p class="text-2xl font-bold text-emerald-400 mt-3">Active</p>
+            <p class="text-xs text-slate-500 mt-1">NG-Core Rule Engine</p>
         </div>
     </div>
 
-    <!-- Threat Logs Table -->
+    <!-- Live Interceptions Table from Database -->
     <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
         <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
-            <h2 class="text-base font-bold text-white">Recent High-Risk Interceptions</h2>
-            <a href="{% url 'inbox:list' %}" class="text-xs font-medium text-blue-400 hover:text-blue-300 transition-colors">View All Logs &rarr;</a>
+            <h2 class="text-base font-bold text-white">Recent Evaluated Messages</h2>
+            <a href="{% url 'inbox:list' %}" class="text-xs font-medium text-blue-400 hover:text-blue-300 transition-colors">View Full Inbox Logs &rarr;</a>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-left text-sm">
                 <thead class="bg-slate-950 text-slate-400 text-xs font-semibold uppercase border-b border-slate-800">
                     <tr>
-                        <th class="py-3 px-6">Source</th>
+                        <th class="py-3 px-6">Channel</th>
                         <th class="py-3 px-6">Sender Details</th>
                         <th class="py-3 px-6">Snippet / Pattern</th>
                         <th class="py-3 px-6">Classification</th>
-                        <th class="py-3 px-6">Action</th>
+                        <th class="py-3 px-6">Confidence</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-800 text-slate-300">
-                    <tr>
-                        <td class="py-4 px-6 font-medium">
-                            <span class="px-2.5 py-1 bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-md">SMS</span>
-                        </td>
-                        <td class="py-4 px-6 font-mono text-xs">+234 803 *** 8192</td>
-                        <td class="py-4 px-6 text-slate-400 max-w-xs truncate">"Your BVN has been blocked due to audit. Click http://cbn-verify.ng to reactivate..."</td>
-                        <td class="py-4 px-6">
-                            <span class="px-2.5 py-1 bg-red-950/80 border border-red-900/60 text-red-400 text-xs font-semibold rounded-md inline-flex items-center space-x-1">
-                                <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-                                <span>Phishing / Scam</span>
-                            </span>
-                        </td>
-                        <td class="py-4 px-6">
-                            <span class="text-xs text-slate-400 font-mono">BLOCKED</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="py-4 px-6 font-medium">
-                            <span class="px-2.5 py-1 bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-md">Email</span>
-                        </td>
-                        <td class="py-4 px-6 font-mono text-xs">alert-support@banking-update-ng.com</td>
-                        <td class="py-4 px-6 text-slate-400 max-w-xs truncate">"Dear Customer, abnormal activity was detected on your mobile banking..."</td>
-                        <td class="py-4 px-6">
-                            <span class="px-2.5 py-1 bg-amber-950/80 border border-amber-900/60 text-amber-400 text-xs font-semibold rounded-md inline-flex items-center space-x-1">
-                                <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                                <span>Suspicious URL</span>
-                            </span>
-                        </td>
-                        <td class="py-4 px-6">
-                            <span class="text-xs text-slate-400 font-mono">QUARANTINED</span>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="py-4 px-6 font-medium">
-                            <span class="px-2.5 py-1 bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-md">SMS</span>
-                        </td>
-                        <td class="py-4 px-6 font-mono text-xs">+234 902 *** 4410</td>
-                        <td class="py-4 px-6 text-slate-400 max-w-xs truncate">"Congratulations! You won N500,000 from Promo. Claim now..."</td>
-                        <td class="py-4 px-6">
-                            <span class="px-2.5 py-1 bg-red-950/80 border border-red-900/60 text-red-400 text-xs font-semibold rounded-md inline-flex items-center space-x-1">
-                                <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-                                <span>Lottery Spam</span>
-                            </span>
-                        </td>
-                        <td class="py-4 px-6">
-                            <span class="text-xs text-slate-400 font-mono">BLOCKED</span>
-                        </td>
-                    </tr>
+                    {% for item in recent_interceptions %}
+                        <tr>
+                            <td class="py-4 px-6 font-medium">
+                                <span class="px-2.5 py-1 bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-md uppercase">
+                                    {{ item.message.get_channel_display }}
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 font-mono text-xs">{{ item.message.sender|default:"Unknown" }}</td>
+                            <td class="py-4 px-6 text-slate-400 max-w-xs truncate">{{ item.message.raw_text }}</td>
+                            <td class="py-4 px-6">
+                                {% if item.label == 'fraud' %}
+                                    <span class="px-2.5 py-1 bg-red-950/80 border border-red-900/60 text-red-400 text-xs font-semibold rounded-md inline-flex items-center space-x-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                        <span>Fraud / Phishing</span>
+                                    </span>
+                                {% elif item.label == 'spam' %}
+                                    <span class="px-2.5 py-1 bg-amber-950/80 border border-amber-900/60 text-amber-400 text-xs font-semibold rounded-md inline-flex items-center space-x-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                        <span>Spam</span>
+                                    </span>
+                                {% else %}
+                                    <span class="px-2.5 py-1 bg-emerald-950/80 border border-emerald-900/60 text-emerald-400 text-xs font-semibold rounded-md inline-flex items-center space-x-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                        <span>Legitimate</span>
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="py-4 px-6 text-xs text-slate-400 font-mono">
+                                {{ item.confidence_score|floatformat:2 }}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="5" class="py-8 text-center text-slate-500 text-xs">
+                                No messages evaluated yet. Run <code class="bg-slate-950 px-2 py-1 rounded text-blue-400">python manage.py load_starter_data</code> or submit a message via the Threat Detector to populate live records.
+                            </td>
+                        </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>

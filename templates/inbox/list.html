@@ -10,8 +10,7 @@
             <p class="text-sm text-slate-400 mt-0.5">Centralized log of flagged messages across monitored communication channels.</p>
         </div>
         <div class="flex items-center space-x-2">
-            <button class="px-3 py-1.5 bg-slate-900 border border-slate-800 text-slate-300 hover:text-white rounded-lg text-xs font-medium transition-colors">Filter by Channel</button>
-            <button class="px-3 py-1.5 bg-slate-900 border border-slate-800 text-slate-300 hover:text-white rounded-lg text-xs font-medium transition-colors">Export Logs</button>
+            <a href="{% url 'detector:scan' %}" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-xs font-medium transition-colors">Scan New Message</a>
         </div>
     </div>
 
@@ -27,34 +26,42 @@
                 </tr>
             </thead>
             <tbody class="divide-y divide-slate-800 text-slate-300">
-                <tr>
-                    <td class="py-4 px-6 font-medium">
-                        <span class="px-2.5 py-1 bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-md">SMS</span>
-                    </td>
-                    <td class="py-4 px-6 font-mono text-xs text-slate-200">+234 803 112 8901</td>
-                    <td class="py-4 px-6 text-slate-400 max-w-sm">"Dear customer, your bank account has been flagged. Update BVN immediately at http://ng-bank-alert.com"</td>
-                    <td class="py-4 px-6">
-                        <span class="px-2.5 py-1 bg-red-950/80 border border-red-900/60 text-red-400 text-xs font-semibold rounded-md inline-flex items-center space-x-1">
-                            <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
-                            <span>CRITICAL SPAM</span>
-                        </span>
-                    </td>
-                    <td class="py-4 px-6 text-xs text-slate-500 font-mono">Today, 19:42</td>
-                </tr>
-                <tr>
-                    <td class="py-4 px-6 font-medium">
-                        <span class="px-2.5 py-1 bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-md">Email</span>
-                    </td>
-                    <td class="py-4 px-6 font-mono text-xs text-slate-200">security@cbn-notice.org</td>
-                    <td class="py-4 px-6 text-slate-400 max-w-sm">"Central Bank Directive: Please submit your eNaira identity verification token..."</td>
-                    <td class="py-4 px-6">
-                        <span class="px-2.5 py-1 bg-amber-950/80 border border-amber-900/60 text-amber-400 text-xs font-semibold rounded-md inline-flex items-center space-x-1">
-                            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                            <span>PHISHING SUSPECT</span>
-                        </span>
-                    </td>
-                    <td class="py-4 px-6 text-xs text-slate-500 font-mono">Today, 18:15</td>
-                </tr>
+                {% for item in results %}
+                    <tr>
+                        <td class="py-4 px-6 font-medium">
+                            <span class="px-2.5 py-1 bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-md uppercase">
+                                {{ item.message.get_channel_display }}
+                            </span>
+                        </td>
+                        <td class="py-4 px-6 font-mono text-xs text-slate-200">{{ item.message.sender|default:"-" }}</td>
+                        <td class="py-4 px-6 text-slate-400 max-w-sm">{{ item.message.raw_text }}</td>
+                        <td class="py-4 px-6">
+                            {% if item.label == 'fraud' %}
+                                <span class="px-2.5 py-1 bg-red-950/80 border border-red-900/60 text-red-400 text-xs font-semibold rounded-md inline-flex items-center space-x-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                    <span>CRITICAL FRAUD</span>
+                                </span>
+                            {% elif item.label == 'spam' %}
+                                <span class="px-2.5 py-1 bg-amber-950/80 border border-amber-900/60 text-amber-400 text-xs font-semibold rounded-md inline-flex items-center space-x-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                    <span>SPAM</span>
+                                </span>
+                            {% else %}
+                                <span class="px-2.5 py-1 bg-emerald-950/80 border border-emerald-900/60 text-emerald-400 text-xs font-semibold rounded-md inline-flex items-center space-x-1">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                    <span>LEGITIMATE</span>
+                                </span>
+                            {% endif %}
+                        </td>
+                        <td class="py-4 px-6 text-xs text-slate-500 font-mono">{{ item.created_at|date:"M d, H:i" }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="5" class="py-8 text-center text-slate-500 text-xs">
+                            No records in database. Run <code class="bg-slate-950 px-2 py-1 rounded text-blue-400">python manage.py load_starter_data</code> to seed starter data.
+                        </td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

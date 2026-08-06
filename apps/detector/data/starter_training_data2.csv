@@ -1,0 +1,8 @@
+text,label,channel,language_mix,sender
+"Urgent: Your BVN has been flagged for non-compliance. Re-validate immediately at http://cbn-audit-portal.ng",fraud,sms,english,+2348039912041
+"Dear Customer, N50,000 has been credited to your account via bank transfer. Ref: TXN94201.",legit,sms,english,GTBank
+"You won N500,000 from MTN Promo! Call 08023456789 to claim your cash reward now.",spam,sms,english,+2348023456789
+"Abeg verify your account details by clicking http://palmpay-login.com to avoid account freeze",fraud,sms,pidgin,+2349011223344
+"Hello, your meeting with the audit team is scheduled for 3:00 PM tomorrow.",legit,email,english,audit@company.com
+"ALERT: Abnormal login attempt detected on your mobile banking app. Click link to secure account.",fraud,email,english,security-notice@bank-online.ng
+"Make 200k weekly working from home! No experience needed. WhatsApp 07012345678",spam,whatsapp,english,+2347012345678

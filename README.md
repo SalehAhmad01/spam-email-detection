@@ -18,7 +18,7 @@ An anti-fraud & phishing threat intelligence web platform built with Django and 
 - **🗄️ Dual Database Strategy**: Native PostgreSQL support via `dj-database-url` with seamless SQLite (`db.sqlite3`) fallback for local development.
 - **🎨 Trustworthy Dark Slate UI**: Responsive layout built with a calm slate & blue palette (`#0f172a`, `#1e293b`, `#2563eb`), reserving red/amber accents strictly for threat alerts.
 - **🔑 Full Authentication System**: User registration, sign-in, logout, user profile dashboard, and `@login_required` route security.
-- **🔁 Human-in-the-Loop Feedback**: Analysts can submit `FeedbackCorrection` entries to flag misclassifications for ML model retraining pipelines.
+- **🔁 Active Learning Feedback Loop**: Analysts can flag misclassifications, polish corrections in Django Admin, and export merged datasets for model retraining.
 
 ---
 
@@ -30,6 +30,7 @@ An anti-fraud & phishing threat intelligence web platform built with Django and 
 | **Database** | PostgreSQL (Production) / SQLite (Local Dev Fallback) |
 | **Configuration** | `python-decouple`, `dj-database-url` |
 | **Frontend & Styling** | Django Templates, Tailwind CSS |
+| **Visualization** | Chart.js (CDN) |
 | **Image Processing** | Pillow 10.2+ |
 
 ---
@@ -55,9 +56,13 @@ spam email detection/
 │
 ├── apps/                        # Modular Django applications
 │   ├── accounts/               # User authentication & profile management
-│   ├── detector/               # Threat detection models & feedback tracking
-│   ├── inbox/                  # Message logs & channel storage
-│   └── dashboard/              # Analytics overview screens
+│   ├── detector/               # Threat detection models, rule engine & feedback
+│   │   ├── management/commands/
+│   │   │   ├── load_starter_data.py    # Command to seed starter dataset
+│   │   │   └── export_training_data.py # Command to export retraining CSV
+│   │   └── data/               # Starter CSV training datasets
+│   ├── inbox/                  # Message logs, submission form & history
+│   └── dashboard/              # Analytics & Chart.js reports
 │
 ├── static/                      # Static assets (CSS, JS, Images)
 │   ├── css/
@@ -70,8 +75,9 @@ spam email detection/
     ├── base.html               # Main base layout with navbar & sidebar
     ├── components/             # Reusable UI components (navbar, sidebar, footer)
     ├── accounts/               # Auth templates (login, register, profile)
+    ├── dashboard/              # Analytics grid template with Chart.js
     ├── detector/               # Threat inspector screen
-    ├── inbox/                  # Flagged message log screen
+    ├── inbox/                  # Submit form, result detail & submission history
     └── pages/                  # Overview dashboard
 ```
 
@@ -133,24 +139,15 @@ Copy-Item .env.example .env
 cp .env.example .env
 ```
 
-*Example `.env` configuration*:
-```env
-SECRET_KEY=your-super-secret-django-key
-DEBUG=True
-ALLOWED_HOSTS=127.0.0.1,localhost
-
-# Database Configuration (Uncomment to use PostgreSQL)
-# DATABASE_URL=postgres://postgres:password@localhost:5432/sms_email_guard
-```
-
 ---
 
-### 5. Run Database Migrations
+### 5. Run Database Migrations & Seed Starter Data
 
-Apply the database migrations (creates SQLite tables automatically if `DATABASE_URL` is omitted):
+Apply the database migrations and populate the local database with 86 Nigerian training records:
 
 ```bash
 python manage.py migrate
+python manage.py load_starter_data
 ```
 
 ---
@@ -160,19 +157,18 @@ python manage.py migrate
 ```bash
 python manage.py createsuperuser
 ```
-Follow the prompts to set your administrative username, email, and password.
 
 ---
 
 ### 7. Run Automated Tests
 
-Verify that all models, routes, and authentication protections are functioning correctly:
+Verify that all models, threat engines, views, and authentication protections function cleanly:
 
 ```bash
 python manage.py test
 ```
 
-> Output: `Ran 4 tests ... OK`
+> Output: `Ran 9 tests ... OK`
 
 ---
 
@@ -186,16 +182,53 @@ Open your browser and navigate to **`http://127.0.0.1:8000/`**.
 
 ---
 
+## 🔁 Active-Learning Retraining Loop
+
+SMS & Email Guard incorporates a continuous human-in-the-loop retraining pipeline to update threat classification rules and ML models over time:
+
+```
+[1. User Inspection / CSV Upload] ➔ [2. Rule Engine / ML Prediction]
+                                            │
+                                            ▼
+                               [3. "This was Misclassified"]
+                                            │
+                                            ▼
+                               [4. FeedbackCorrection Saved]
+                                            │
+                                            ▼
+                               [5. Admin Review & Polish]
+                                            │
+                                            ▼
+                               [6. export_training_data]
+                                            │
+                                            ▼
+                             [7. Updated Retraining CSV Feed]
+```
+
+### Steps in the Retraining Loop:
+
+1. **Submit Corrections**: On any inspection detail page (`/inbox/result/<pk>/`), users or analysts click **"This was misclassified"** to submit a `FeedbackCorrection` (correct label + reasoning note).
+2. **Review in Django Admin**: Administrative superusers inspect correction entries at `/admin/detector/feedbackcorrection/` with color-coded label badges and raw message snippets.
+3. **Export Retraining Dataset**: Run the management command to merge original dataset records with human corrections:
+   ```bash
+   python manage.py export_training_data
+   ```
+   *By default, this writes an updated CSV to `apps/detector/data/retraining_dataset.csv` ready to feed into ML training scripts (`train_model.py`).*
+
+---
+
 ## 🔑 Application Endpoints
 
 | URL Path | Access | Description |
 |---|---|---|
 | `/` | Logged In | Main Anti-Fraud Overview Dashboard |
+| `/dashboard/analytics/` | Logged In | Interactive Chart.js Threat Analytics |
+| `/inbox/submit/` | Logged In | Message Threat Inspector & Bulk CSV Upload |
+| `/inbox/history/` | Logged In | User Submission History with Filters & Pagination |
+| `/inbox/result/<pk>/` | Logged In | Inspection Result Details & Feedback Correction Form |
 | `/accounts/login/` | Public | Standalone User Sign-In Page |
 | `/accounts/register/` | Public | Standalone User Registration Page |
 | `/accounts/profile/` | Logged In | Account Security & Profile Dashboard |
-| `/detector/scan/` | Logged In | Threat Inspection Console |
-| `/inbox/` | Logged In | Fraud & Spam Interception Logs |
 | `/admin/` | Admin Only | Django Administration Portal |
 
 ---
@@ -204,7 +237,7 @@ Open your browser and navigate to **`http://127.0.0.1:8000/`**.
 
 - **`Message` (`apps.inbox`)**: Stores raw message bodies, channels (`sms`, `email`, `whatsapp`), sender details, submission timestamp, and user relation.
 - **`DetectionResult` (`apps.detector`)**: Linked 1:1 with `Message`. Stores threat classification label (`legit`, `spam`, `fraud`), confidence score, extracted keywords, language mix (`english`, `pidgin`, `mixed`), and model version.
-- **`FeedbackCorrection` (`apps.detector`)**: Stores human analyst corrections and notes for retraining ML detection models.
+- **`FeedbackCorrection` (`apps.detector`)**: Stores human analyst corrections (`corrected_label`, `note`, `corrected_by`) for model retraining.
 
 ---
 

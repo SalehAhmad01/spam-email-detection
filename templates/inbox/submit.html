@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}Check Message | SMS & Email Guard{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-8">
+    <!-- Header -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm flex items-center justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-white tracking-tight">Threat Inspection & Checking</h1>
+            <p class="text-sm text-slate-400 mt-1">Submit SMS or email text for real-time fraud & spam rule analysis.</p>
+        </div>
+        <div class="h-10 w-10 rounded-xl bg-blue-600 flex items-center justify-center font-bold text-white text-lg shadow-md">
+            🛡️
+        </div>
+    </div>
+
+    <!-- Alert Messages -->
+    {% if messages %}
+        <div class="space-y-2">
+            {% for message in messages %}
+                <div class="p-3.5 text-xs rounded-lg border {% if message.tags == 'error' %}bg-red-950/80 border-red-900/60 text-red-300{% elif message.tags == 'success' %}bg-emerald-950/80 border-emerald-900/60 text-emerald-300{% else %}bg-slate-800 border-slate-700 text-slate-300{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <!-- Grid: Single Submit Form + Bulk CSV Upload -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Single Message Check Form (2 Cols) -->
+        <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-md">
+            <h2 class="text-lg font-bold text-white mb-6 border-b border-slate-800 pb-3">Single Message Inspection</h2>
+
+            <form method="post" class="space-y-6" novalidate>
+                {% csrf_token %}
+
+                <!-- Channel Toggle (SMS / Email) -->
+                <div>
+                    <label class="block text-xs font-semibold uppercase text-slate-400 tracking-wider mb-2">Communication Channel</label>
+                    <div class="grid grid-cols-2 gap-3">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="channel" value="sms" class="peer hidden" checked>
+                            <div class="flex items-center justify-center space-x-2 py-3 px-4 bg-slate-950 border border-slate-800 rounded-xl text-slate-400 text-sm font-semibold peer-checked:bg-blue-950 peer-checked:border-blue-500 peer-checked:text-blue-400 transition-all shadow-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                                </svg>
+                                <span>SMS Text</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="channel" value="email" class="peer hidden">
+                            <div class="flex items-center justify-center space-x-2 py-3 px-4 bg-slate-950 border border-slate-800 rounded-xl text-slate-400 text-sm font-semibold peer-checked:bg-blue-950 peer-checked:border-blue-500 peer-checked:text-blue-400 transition-all shadow-sm">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                                <span>Email Message</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Sender Input (Optional) -->
+                <div>
+                    <label for="{{ single_form.sender.id_for_label }}" class="block text-xs font-semibold uppercase text-slate-400 tracking-wider mb-2">Sender ID / Phone / Email (Optional)</label>
+                    {{ single_form.sender }}
+                </div>
+
+                <!-- Content Textarea -->
+                <div>
+                    <label for="{{ single_form.raw_text.id_for_label }}" class="block text-xs font-semibold uppercase text-slate-400 tracking-wider mb-2">Message Content</label>
+                    {{ single_form.raw_text }}
+                    {% if single_form.raw_text.errors %}
+                        <p class="text-xs text-red-400 mt-1.5">{{ single_form.raw_text.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <button type="submit" name="submit_single" class="w-full py-3 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-sm rounded-xl shadow-md transition-colors flex items-center justify-center space-x-2">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                    <span>Run Threat Check</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- Bulk CSV Upload Card (1 Col) -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-md flex flex-col justify-between">
+            <div>
+                <h2 class="text-lg font-bold text-white mb-2">Bulk CSV Upload</h2>
+                <p class="text-xs text-slate-400 mb-6">Upload a batch CSV file to analyze multiple messages at once.</p>
+
+                <form method="post" enctype="multipart/form-data" class="space-y-5" novalidate>
+                    {% csrf_token %}
+                    <div>
+                        <label for="{{ bulk_form.csv_file.id_for_label }}" class="block text-xs font-semibold uppercase text-slate-400 tracking-wider mb-2">Select CSV File</label>
+                        {{ bulk_form.csv_file }}
+                    </div>
+
+                    <div class="p-3 bg-slate-950 border border-slate-800 rounded-lg text-slate-400 text-xs space-y-1 font-mono">
+                        <p class="font-bold text-slate-300">Expected CSV Headers:</p>
+                        <p class="text-blue-400">text, channel, sender</p>
+                    </div>
+
+                    <button type="submit" name="submit_bulk" class="w-full py-3 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm rounded-xl border border-slate-700 shadow-sm transition-colors flex items-center justify-center space-x-2">
+                        <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                        </svg>
+                        <span>Process Batch CSV</span>
+                    </button>
+                </form>
+            </div>
+
+            <div class="mt-6 border-t border-slate-800 pt-4 text-center">
+                <a href="{% url 'inbox:list' %}" class="text-xs font-medium text-slate-400 hover:text-blue-400 transition-colors">&larr; View Historical Logs</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

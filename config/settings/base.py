@@ -32,6 +32,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -39,6 +40,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 
 INTERNAL_IPS = [
@@ -71,6 +73,7 @@ ASGI_APPLICATION = 'config.asgi.application'
 # Database
 # Uses PostgreSQL if DATABASE_URL is set in environment, otherwise falls back to SQLite
 DATABASE_URL = config('DATABASE_URL', default=None)
+SQLITE_DB_PATH = config('SQLITE_DB_PATH', default=None)
 
 if DATABASE_URL:
     DATABASES = {
@@ -80,6 +83,13 @@ if DATABASE_URL:
             conn_health_checks=True,
         )
     }
+elif SQLITE_DB_PATH:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': Path(SQLITE_DB_PATH),
+        }
+    }
 else:
     DATABASES = {
         'default': {
@@ -87,6 +97,7 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -114,6 +125,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
 
 # Media files
 MEDIA_URL = '/media/'

@@ -1,0 +1,152 @@
+{% extends 'base.html' %}
+
+{% block title %}My Submission History | SMS & Email Guard{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header Section -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-slate-900 border border-slate-800 rounded-xl p-6 shadow-sm">
+        <div>
+            <h1 class="text-2xl font-bold text-white tracking-tight">My Submission History</h1>
+            <p class="text-sm text-slate-400 mt-0.5">Track all messages you have submitted for threat inspection.</p>
+        </div>
+        <div class="flex items-center space-x-3">
+            <a href="{% url 'inbox:submit' %}" class="px-4 py-2 bg-blue-600 hover:bg-blue-500 text-white font-medium text-sm rounded-lg shadow-sm transition-colors flex items-center space-x-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                </svg>
+                <span>Check New Message</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <form method="get" class="bg-slate-900 border border-slate-800 rounded-xl p-4 flex flex-wrap items-center gap-4 shadow-sm">
+        <div class="flex items-center space-x-2">
+            <label for="channel" class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Channel:</label>
+            <select id="channel" name="channel" class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500 transition-colors">
+                <option value="">All Channels</option>
+                <option value="sms" {% if channel_filter == 'sms' %}selected{% endif %}>SMS Text</option>
+                <option value="email" {% if channel_filter == 'email' %}selected{% endif %}>Email Message</option>
+                <option value="whatsapp" {% if channel_filter == 'whatsapp' %}selected{% endif %}>WhatsApp</option>
+            </select>
+        </div>
+
+        <div class="flex items-center space-x-2">
+            <label for="label" class="text-xs font-semibold text-slate-400 uppercase tracking-wider">Classification:</label>
+            <select id="label" name="label" class="bg-slate-950 border border-slate-800 rounded-lg px-3 py-1.5 text-xs text-white focus:outline-none focus:border-blue-500 transition-colors">
+                <option value="">All Labels</option>
+                <option value="legit" {% if label_filter == 'legit' %}selected{% endif %}>Legitimate</option>
+                <option value="spam" {% if label_filter == 'spam' %}selected{% endif %}>Spam</option>
+                <option value="fraud" {% if label_filter == 'fraud' %}selected{% endif %}>Fraud / Phishing</option>
+            </select>
+        </div>
+
+        <div class="flex items-center space-x-2 ml-auto">
+            <button type="submit" class="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs rounded-lg shadow-sm transition-colors">
+                Apply Filters
+            </button>
+            <a href="{% url 'inbox:history' %}" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs rounded-lg transition-colors">
+                Reset
+            </a>
+        </div>
+    </form>
+
+    <!-- Submissions Table -->
+    <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden shadow-sm">
+        <div class="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
+            <h2 class="text-base font-bold text-white">Inspected Records</h2>
+            <span class="text-xs text-slate-400 font-mono">Showing {{ page_obj.object_list|length }} of {{ total_count }} Entries</span>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+                <thead class="bg-slate-950 text-slate-400 text-xs font-semibold uppercase border-b border-slate-800">
+                    <tr>
+                        <th class="py-3.5 px-6">Channel</th>
+                        <th class="py-3.5 px-6">Sender Details</th>
+                        <th class="py-3.5 px-6">Message Content</th>
+                        <th class="py-3.5 px-6">Classification</th>
+                        <th class="py-3.5 px-6">Confidence</th>
+                        <th class="py-3.5 px-6">Date</th>
+                        <th class="py-3.5 px-6">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800 text-slate-300">
+                    {% for item in page_obj %}
+                        <tr class="hover:bg-slate-850/50 transition-colors">
+                            <td class="py-4 px-6 font-medium">
+                                <span class="px-2.5 py-1 bg-slate-800 border border-slate-700 text-slate-300 text-xs rounded-md uppercase">
+                                    {{ item.message.get_channel_display }}
+                                </span>
+                            </td>
+                            <td class="py-4 px-6 font-mono text-xs text-slate-200">{{ item.message.sender|default:"-" }}</td>
+                            <td class="py-4 px-6 text-slate-400 max-w-xs truncate">{{ item.message.raw_text }}</td>
+                            <td class="py-4 px-6">
+                                {% if item.label == 'fraud' %}
+                                    <span class="px-2.5 py-1 bg-red-950/80 border border-red-900/60 text-red-400 text-xs font-semibold rounded-md inline-flex items-center space-x-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span>
+                                        <span>FRAUD</span>
+                                    </span>
+                                {% elif item.label == 'spam' %}
+                                    <span class="px-2.5 py-1 bg-amber-950/80 border border-amber-900/60 text-amber-400 text-xs font-semibold rounded-md inline-flex items-center space-x-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                        <span>SPAM</span>
+                                    </span>
+                                {% else %}
+                                    <span class="px-2.5 py-1 bg-emerald-950/80 border border-emerald-900/60 text-emerald-400 text-xs font-semibold rounded-md inline-flex items-center space-x-1">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                        <span>LEGIT</span>
+                                    </span>
+                                {% endif %}
+                            </td>
+                            <td class="py-4 px-6 text-xs text-slate-400 font-mono">
+                                {% widthratio item.confidence_score 1 100 %}%
+                            </td>
+                            <td class="py-4 px-6 text-xs text-slate-500 font-mono">
+                                {{ item.created_at|date:"M d, H:i" }}
+                            </td>
+                            <td class="py-4 px-6">
+                                <a href="{% url 'inbox:result' pk=item.pk %}" class="text-xs text-blue-400 hover:text-blue-300 font-semibold transition-colors">
+                                    Inspect &rarr;
+                                </a>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="py-8 text-center text-slate-500 text-xs">
+                                No submissions found. <a href="{% url 'inbox:submit' %}" class="text-blue-400 underline">Submit a message</a> to test threat detection.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        {% if page_obj.has_other_pages %}
+            <div class="px-6 py-4 border-t border-slate-800 flex items-center justify-between">
+                <div>
+                    {% if page_obj.has_previous %}
+                        <a href="?page={{ page_obj.previous_page_number }}&channel={{ channel_filter }}&label={{ label_filter }}" class="px-3 py-1.5 bg-slate-950 border border-slate-800 text-slate-300 hover:text-white rounded-lg text-xs font-medium transition-colors">
+                            &larr; Previous
+                        </a>
+                    {% endif %}
+                </div>
+
+                <span class="text-xs text-slate-400 font-mono">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+
+                <div>
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}&channel={{ channel_filter }}&label={{ label_filter }}" class="px-3 py-1.5 bg-slate-950 border border-slate-800 text-slate-300 hover:text-white rounded-lg text-xs font-medium transition-colors">
+                            Next &rarr;
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
