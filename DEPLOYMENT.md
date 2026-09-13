@@ -19,11 +19,11 @@ If you don't want to create a PostgreSQL server, you can deploy using **SQLite**
    - **Branch**: `main`
    - **Build Command**:
      ```bash
-     pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate && python manage.py load_starter_data
+     pip install -r requirements.txt && python manage.py collectstatic --noinput
      ```
    - **Start Command**:
      ```bash
-     gunicorn config.wsgi:application
+     python manage.py migrate --noinput && gunicorn config.wsgi:application
      ```
 
 ### Step 2: Set Environment Variables

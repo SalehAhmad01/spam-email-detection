@@ -84,10 +84,12 @@ if DATABASE_URL:
         )
     }
 elif SQLITE_DB_PATH:
+    sqlite_path = Path(SQLITE_DB_PATH)
+    sqlite_path.parent.mkdir(parents=True, exist_ok=True)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': Path(SQLITE_DB_PATH),
+            'NAME': sqlite_path,
         }
     }
 else:
